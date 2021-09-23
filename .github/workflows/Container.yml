@@ -6,14 +6,17 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 3'
+  tags:
+    - '**'
 
 jobs:
 
   container:
     runs-on: ubuntu-latest
-    env:
-      IMAGE: ghcr.io/chipsalliance/verible-linter-action
     steps:
+
+    - name: set image name
+      run: echo "IMAGE=ghcr.io/chipsalliance/verible-linter-action:${GITHUB_REF##*/}" >> $GITHUB_ENV
 
     - uses: actions/checkout@v2
 
