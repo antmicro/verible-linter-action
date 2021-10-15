@@ -27,8 +27,8 @@ fi
 touch "$INPUT_LOG_FILE"
 export REVIEWDOG_GITHUB_API_TOKEN="$INPUT_GITHUB_TOKEN"
 rdf_log=$(mktemp)
-if [ "$INPUT_SUGGEST_FIXES" = "true" ]; then
-  echo "suggesting fixes"
+#if [ "$INPUT_SUGGEST_FIXES" = "true" ]; then
+#  echo "suggesting fixes"
   patch=$(mktemp)
   /opt/antmicro/action.py \
     --conf-file "$INPUT_CONFIG_FILE" \
@@ -38,22 +38,22 @@ if [ "$INPUT_SUGGEST_FIXES" = "true" ]; then
     --patch "$patch" \
     "$INPUT_PATHS"
 
-  /opt/antmicro/rdf_gen.py \
-    --efm-file "$INPUT_LOG_FILE" \
-    --diff-file "$patch" > "$rdf_log"
-  rm "$patch"
-else
-  echo "not suggesting fixes"
-  /opt/antmicro/action.py \
-    --conf-file "$INPUT_CONFIG_FILE" \
-    --extra-opts "$INPUT_EXTRA_ARGS" \
-    --exclude-paths "$INPUT_EXCLUDE_PATHS" \
-    --log-file "$INPUT_LOG_FILE" \
-    "$INPUT_PATHS"
-
-  /opt/antmicro/rdf_gen.py \
-    --efm-file "$INPUT_LOG_FILE" > "$rdf_log"
-fi
+#  /opt/antmicro/rdf_gen.py \
+#    --efm-file "$INPUT_LOG_FILE" \
+#    --diff-file "$patch" > "$rdf_log"
+#  rm "$patch"
+#else
+#  echo "not suggesting fixes"
+#  /opt/antmicro/action.py \
+#    --conf-file "$INPUT_CONFIG_FILE" \
+#    --extra-opts "$INPUT_EXTRA_ARGS" \
+#    --exclude-paths "$INPUT_EXCLUDE_PATHS" \
+#    --log-file "$INPUT_LOG_FILE" \
+#    "$INPUT_PATHS"
+#
+#  /opt/antmicro/rdf_gen.py \
+#    --efm-file "$INPUT_LOG_FILE" > "$rdf_log"
+#fi
 
 echo "Running reviewdog"
 
@@ -61,7 +61,7 @@ echo "Running reviewdog"
   -reporter="$INPUT_REVIEWDOG_REPORTER" \
   -fail-on-error="$INPUT_FAIL_ON_ERROR" \
   -name="verible-verilog-lint" \
-  -diff="$diff_cmd" < "$rdf_log" || exitcode=$?
+  -diff="$diff_cmd" < "$INPUT_LOG_FILE" || exitcode=$?
 
 if [ -f "$event_file" ]; then
   git checkout -

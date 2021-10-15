@@ -109,8 +109,8 @@ def main(conf_file, extra_opts, exclude_paths, log_file, patch, path):
         warnings.warn("File set is empty, the action has nothing to do.")
         exit()
 
-    command = (["verible-verilog-lint"]
-               + patch + conf_file + extra_opts + list(files))
+    command = (["verible-verilog-lint", "--output_format=rdjson"]
+               + conf_file + extra_opts + list(files))
     print("Running " + " ".join(command) + "\n\n")
     verible_linted = subprocess.run(command, capture_output=True)
 

@@ -9,13 +9,20 @@ RUN apt-get update -qq \
     python3 \
     python3-click \
     python3-unidiff \
+    g++ \
+    apt-transport-https \
+    gnupg \
+ && curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg \
+ && mv bazel.gpg /etc/apt/trusted.gpg.d/ \
+ && echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list \
+ && apt update && apt -y install bazel \
  && apt-get autoclean && apt-get clean && apt-get -y autoremove \
  && update-ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir verible \
- && curl -fsSL https://github.com/chipsalliance/verible/releases/download/v0.0-1442-g27693bd/verible-v0.0-1442-g27693bd-Ubuntu-20.04-focal-x86_64.tar.gz | tar -zxvf - -C verible --strip-components=1 \
- && for i in ./verible/bin/*; do cp $i /bin/$(basename $i); done
+RUN git clone https://github.com/antmicro/verible.git -b wsip/rdformat \
+ && cd verible && GIT_VERSION=$(git --version | cut -d " " -f 3) bazel build //verilog/tools/lint:verible-verilog-lint \
+ && cp ./bazel-bin/verilog/tools/lint/verible-verilog-lint /bin/
 
 ENV GOBIN=/opt/go/bin
 
