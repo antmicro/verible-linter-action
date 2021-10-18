@@ -57,7 +57,7 @@ rdf_log=$(mktemp)
 
 echo "Running reviewdog"
 
-"$GOBIN"/reviewdog -f=rdjson \
+"$GOBIN"/reviewdog -f=rdjsonl \
   -reporter="$INPUT_REVIEWDOG_REPORTER" \
   -fail-on-error="$INPUT_FAIL_ON_ERROR" \
   -name="verible-verilog-lint" \
