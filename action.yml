@@ -59,7 +59,7 @@ runs:
         github_token: ${{ inputs.github_token }}
         verible_version: ${{ inputs.verible_version }}
     - name: Install reviewdog
-      uses: chipsalliance/verible-actions-common/build-reviewdog@main
+      uses: antmicro/verible-actions-common/build-reviewdog@rkol/reviewdog-skipped-annotation
     - name: Run Verible linter with reviewdog
       shell: bash
       env:
